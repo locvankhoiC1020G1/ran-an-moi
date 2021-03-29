@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="Snake.js"></script>
+    <script src="Food.js"></script>
+</head>
+<body>
+<canvas id="myCanvas" width="400px" height="400px" style="border: 1px solid black"></canvas>
+<p id="score"></p>
+
+<script>
+    let score = 0;
+    let paper = document.getElementById("myCanvas");
+    let snake = new Snake(20, 100, 100, 10);
+    let food = new Food(20,randomNumber(0,paper.width-20), randomNumber(0,paper.height-20));
+    console.log(food)
+
+    food.draw(paper);
+    snake.draw(paper);
+
+    //clearRect() Xóa màn hình canvas;
+
+    function clearScreen() {
+        let pen = paper.getContext("2d");
+        pen.clearRect(0,0,paper.width, paper.height);
+    }
+
+    // thay đổi  hướng rắn
+    function changeDirection(evt){
+        switch (evt.key){
+            case 'ArrowUp':
+                snake.direction = "up";
+                break;
+            case 'ArrowDown':
+                snake.direction = "down";
+                break;
+            case 'ArrowLeft':
+                snake.direction = "left";
+                break;
+            case 'ArrowRight':
+                snake.direction = "right";
+                break;
+        }
+    }
+
+    // di chuyển rắn
+    function moveSnake() {
+        clearScreen();
+        snake.move();
+        snake.draw(paper);
+        food.draw(paper);
+        snake.checkWall(paper);
+        snake.eat(food);
+        display();
+    }
+    //addEventListener() lắng nghe sự kiện khi thao tác với chuột, bàn phím
+    window.addEventListener("keydown", changeDirection);
+    //gọi lại hàm sau bao nhiêu thời gian setInterval(hàm,thời gian);
+     setInterval(moveSnake,60);
+     function randomNumber(min, max) {
+         let rand = Math.random() * (max -min);
+         let int = Math.floor(rand) +min;
+         return int;
+     }
+
+     function spawnFood(){
+         food.x = randomNumber(0,paper.width-20);
+         food.y = randomNumber(0,paper.height-20);
+     }
+     function display() {
+         document.getElementById('score').innerText = "score:" + score;
+     }
+
+</script>
+</body>
+</html>
